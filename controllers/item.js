@@ -1,30 +1,30 @@
 "use strict";
 
-const Item = require("../models/Item");
+const Message = require("../models/Message");
 
 module.exports.findAll = (req, res, next) => {
-  Item
+  Message
   .findAll()
-  .then(items => {
-    res.status(200).send(items);
+  .then(messages => {
+    res.status(200).send(messages);
   })
   .catch(err => next(err));
 };
 
 module.exports.saveOne = (req, res, next) => {
-  Item
+  Message
   .saveOne(req.body)
-  .then(item => {
-    res.status(200).send(item);
+  .then(message => {
+    res.status(200).send(message);
   })
   .catch(err => next(err));
 };
 
 module.exports.updateOne = (req, res, next) => {
-  Item
+  Message
   .updateById(req.body, req.params.id)
-  .then(item => {
-    res.status(200).send(item);
+  .then(message => {
+    res.status(200).send(message);
   })
   .catch(err => next(err));
 };

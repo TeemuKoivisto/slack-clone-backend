@@ -46,6 +46,8 @@ app.use(cors());
  */
 app.use("", require("./config/routes"));
 
+const SocketIOServer = require("./services/SocketIOServer");
+
 /**
  * If module has no parent which means that it has been loaded directly with 'node app.js'
  * then start up the server. This is used for testing when starting up the server is
@@ -58,6 +60,13 @@ if (!module.parent) {
     } else {
       console.log(`App is listening on port ${port}`);
     }
+  });
+
+  SocketIOServer.start();
+
+  process.on("exit", () => {
+    app.close();
+    process.exit();
   });
 }
 

@@ -2,11 +2,17 @@ const mongoose = require("./db_connection");
 
 const Schema = mongoose.Schema;
 
-const ItemSchema = new Schema({
+const MessageSchema = new Schema({
   created: { type: Date, default: Date.now },
-  owner: {type: Schema.Types.ObjectId, ref: "User"},
   content: { type: String, required: true },
-  users: [{type: Schema.Types.ObjectId, ref: "User"}],
+  author: { type: Schema.Types.ObjectId, ref: "User" },
+  room: { type: Schema.Types.ObjectId, ref: "Room" },
+});
+
+const RoomSchema = new Schema({
+  created: { type: Date, default: Date.now },
+  name: { type: String, required: true },
+  messages: [{ type: Schema.Types.ObjectId, ref: "Message" }],
 });
 
 const UserSchema = new Schema({
@@ -19,6 +25,7 @@ const UserSchema = new Schema({
 });
 
 module.exports = {
-  Item: mongoose.model("Item", ItemSchema),
+  Message: mongoose.model("Message", MessageSchema),
+  Room: mongoose.model("Room", RoomSchema),
   User: mongoose.model("User", UserSchema),
 };

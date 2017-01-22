@@ -1,6 +1,6 @@
 "use strict";
 
-const jwt = require("jwt-simple");
+const jwt = require("jsonwebtoken");
 
 class TokenGenerator {
   constructor(secret) {
@@ -9,7 +9,7 @@ class TokenGenerator {
   decodeToken(token) {
     let decoded;
     try {
-      decoded = jwt.decode(token, this.secret);
+      decoded = jwt.verify(token, this.secret);
     } catch (e) {
       decoded = undefined;
     }
@@ -18,18 +18,20 @@ class TokenGenerator {
   isTokenExpired(decodedToken) {
     return new Date() > decodedToken.expires;
   }
-  generateLoginToken(user) {
-    const date = new Date();
+  generateLoginPayload(user) {
     const payload = {
       user: {
         id: user.id,
+        fullname: `${user.firstname} ${user.lastname}`,
         role: user.role,
       },
       name: "login",
-      created: new Date(),
-      expires: date.setDate(date.getDate() + 1),
+      expires: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 2,
     };
-    return jwt.encode(payload, this.secret);
+    return payload;
+  }
+  generateToken(payload) {
+    return jwt.sign(payload, this.secret);
   }
 }
 

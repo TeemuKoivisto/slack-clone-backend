@@ -27,12 +27,6 @@ module.exports.dropTables = () => {
 };
 
 module.exports.addTestData = () => Promise.all([
-  models.Item.create({
-    content: "Something something",
-  }),
-  models.Item.create({
-    content: "I'm a virus, press alt + f4 to stop me",
-  }),
   models.User.create({
     firstname: "Admin",
     lastname: "Jokunen",
