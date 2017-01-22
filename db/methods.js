@@ -27,9 +27,16 @@ module.exports.dropTables = () => {
 };
 
 module.exports.addTestData = () => Promise.all([
+  models.Room.create({
+    name: "main-lobby",
+  }),
+  models.Room.create({
+    name: "other-room",
+  }),
   models.User.create({
     firstname: "Admin",
     lastname: "Jokunen",
+    nick: "boss",
     email: "admin@asdf.asdf",
     passwordHash: "$2a$10$Fs0N7KD/xUH4NAfW2s1MoOh/yH3G7mAtGycMY5tMUvCGqiWWdaSue", // 'asdf' in plain text
     role: "admin",
@@ -37,6 +44,7 @@ module.exports.addTestData = () => Promise.all([
   models.User.create({
     firstname: "Matti",
     lastname: "Menninkäinen",
+    nick: "maza",
     email: "user@asdf.asdf",
     passwordHash: "$2a$10$Fs0N7KD/xUH4NAfW2s1MoOh/yH3G7mAtGycMY5tMUvCGqiWWdaSue",
     role: "user",

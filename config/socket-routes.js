@@ -1,5 +1,6 @@
 "use strict";
 
+const roomCtrl = require("../controllers/room");
 const msgCtrl = require("../controllers/message");
 
 const validateEvent = (name, schema) => (event, next) => {
@@ -22,20 +23,24 @@ module.exports = (socket) => (action) => {
   }
 
   switch (action.type) {
+    case "ROOM_GET_ONE":
+      roomCtrl.findOne(socket, action, next);
+      break;
+    case "ROOM_GET_ALL":
+      roomCtrl.findAll(socket, action, next);
+      break;
+    case "ROOM_SAVE_ONE":
+      validateEvent("message", "save");
+      roomCtrl.saveOne(socket, action, next);
+      break;
     case "MESSAGE_GET_ALL":
-      console.log("git mesg");
       msgCtrl.findAll(socket, action, next);
       break;
     case "MESSAGE_SAVE_ONE":
-      console.log("save msg");
       validateEvent("message", "save");
       msgCtrl.saveOne(socket, action, next);
       break;
-    case "MESSAGE_SAVE_ONE":
-      console.log("sva mesg");
-      break;
     default:
-      console.log("default lul");
       errorHandler();
   }
 };

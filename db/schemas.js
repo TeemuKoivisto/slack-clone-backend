@@ -5,8 +5,9 @@ const Schema = mongoose.Schema;
 const MessageSchema = new Schema({
   created: { type: Date, default: Date.now },
   content: { type: String, required: true },
-  author: { type: Schema.Types.ObjectId, ref: "User" },
-  room: { type: Schema.Types.ObjectId, ref: "Room" },
+  authorNick: { type: String, required: true },
+  User: { type: Schema.Types.ObjectId, ref: "User" },
+  Room: { type: Schema.Types.ObjectId, ref: "Room" },
 });
 
 const RoomSchema = new Schema({
@@ -19,6 +20,7 @@ const UserSchema = new Schema({
   created: { type: Date, default: Date.now },
   firstname: { type: String, required: true },
   lastname: { type: String, required: true },
+  nick: { type: String, required: true },
   email: { type: String, required: true, unique: true },
   passwordHash: { type: String, required: true },
   role: { type: String, required: true },
