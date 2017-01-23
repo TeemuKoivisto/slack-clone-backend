@@ -4,7 +4,7 @@ const Room = require("../models/Room");
 
 module.exports.findOne = (socket, action, next) => {
   Room
-  .findOne()
+  .findOne(action.data)
   .then(room => {
     socket.emit("server:push", [{
       type: "ROOM_GET_ONE_SUCCESS",

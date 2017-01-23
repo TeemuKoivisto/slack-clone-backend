@@ -30,4 +30,5 @@ module.exports = {
   Message: mongoose.model("Message", MessageSchema),
   Room: mongoose.model("Room", RoomSchema),
   User: mongoose.model("User", UserSchema),
+  mongoose,
 };

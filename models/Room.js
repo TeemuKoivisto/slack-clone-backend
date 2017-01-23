@@ -13,6 +13,9 @@ class Room extends BaseModel {
   // }
 
   findOne(params) {
+    if (params && params._id) {
+      params._id = this.Models.mongoose.Types.ObjectId(params._id);
+    }
     return this.Models[this.modelname].findOne(params)
       .populate("messages");
   }
