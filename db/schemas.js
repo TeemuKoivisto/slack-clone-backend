@@ -14,6 +14,7 @@ const RoomSchema = new Schema({
   created: { type: Date, default: Date.now },
   name: { type: String, required: true },
   messages: [{ type: Schema.Types.ObjectId, ref: "Message" }],
+  users: [{ type: Schema.Types.ObjectId, ref: "Users" }],
 });
 
 const UserSchema = new Schema({

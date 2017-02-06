@@ -6,17 +6,15 @@ class TokenGenerator {
   constructor(secret) {
     this.secret = secret;
   }
-  decodeToken(token) {
-    let decoded;
-    try {
-      decoded = jwt.verify(token, this.secret);
-    } catch (e) {
-      decoded = undefined;
-    }
-    return decoded;
+  verifyToken(token, options) {
+    return jwt.verify(token, this.secret, options);
   }
   isTokenExpired(decodedToken) {
-    return new Date() > decodedToken.expires;
+    // return new Date() > decodedToken.expires;
+    return Math.floor(Date.now() / 1000) > decodedToken.expires;
+  }
+  generateToken(payload) {
+    return jwt.sign(payload, this.secret, { audience: payload.audience });
   }
   generateLoginPayload(user) {
     const payload = {
@@ -24,14 +22,14 @@ class TokenGenerator {
         id: user.id,
         fullname: `${user.firstname} ${user.lastname}`,
         role: user.role,
+        StudyFieldId: user.StudyFieldId,
       },
-      name: "login",
+      audience: "login",
+      // expires: Math.floor(Date.now() / 1000) + 15,
       expires: Math.floor(Date.now() / 1000) + 60 * 60 * 24 * 2,
+      // expiresIn: 172800, // seconds
     };
     return payload;
-  }
-  generateToken(payload) {
-    return jwt.sign(payload, this.secret);
   }
 }
 

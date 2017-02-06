@@ -1,7 +1,9 @@
 "use strict";
 
+
 const roomCtrl = require("../controllers/room");
 const msgCtrl = require("../controllers/message");
+const userCtrl = require("../controllers/user");
 
 const validateEvent = (name, schema) => (event, next) => {
 
@@ -39,6 +41,9 @@ module.exports = (socket) => (action) => {
     case "MESSAGE_SAVE_ONE":
       validateEvent("message", "save");
       msgCtrl.saveOne(socket, action, next);
+      break;
+    case "USER_JOIN_ROOM":
+      userCtrl.joinRoom(socket, action, next);
       break;
     default:
       errorHandler();
