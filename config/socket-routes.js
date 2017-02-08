@@ -17,33 +17,35 @@ const router = (actionType, middleware) => (next) => {
 // for m in middlewares if (m.next() return next(m))  
 };
 
-module.exports = (socket) => (action) => {
+module.exports = (socket, broadcast) => (action) => {
   action.user = socket.decoded_token.user;
 
   const next = (err) => {
     console.log("yo error", err)
   }
 
+  console.log(broadcast)
+
   switch (action.type) {
     case "ROOM_GET_ONE":
-      roomCtrl.findOne(socket, action, next);
+      roomCtrl.findOne(action, broadcast, next);
       break;
     case "ROOM_GET_ALL":
-      roomCtrl.findAll(socket, action, next);
+      roomCtrl.findAll(action, broadcast, next);
       break;
     case "ROOM_SAVE_ONE":
       validateEvent("message", "save");
-      roomCtrl.saveOne(socket, action, next);
+      roomCtrl.saveOne(action, broadcast, next);
       break;
-    case "MESSAGE_GET_ALL":
-      msgCtrl.findAll(socket, action, next);
+    case "ROOM_JOIN_ONE":
+      roomCtrl.joinRoom(action, broadcast, next);
       break;
+    // case "MESSAGE_GET_ALL":
+    //   msgCtrl.findAll(action, broadcast, next);
+    //   break;
     case "MESSAGE_SAVE_ONE":
       validateEvent("message", "save");
-      msgCtrl.saveOne(socket, action, next);
-      break;
-    case "USER_JOIN_ROOM":
-      userCtrl.joinRoom(socket, action, next);
+      msgCtrl.saveOne(action, broadcast, next);
       break;
     default:
       errorHandler();

@@ -25,6 +25,7 @@ const UserSchema = new Schema({
   email: { type: String, required: true, unique: true },
   passwordHash: { type: String, required: true },
   role: { type: String, required: true },
+  online: { type: Boolean, required: true, default: false },
 });
 
 module.exports = {

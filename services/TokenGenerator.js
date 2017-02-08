@@ -31,6 +31,9 @@ class TokenGenerator {
     };
     return payload;
   }
+  derp() {
+    return "derp"
+  }
 }
 
 module.exports = new TokenGenerator(process.env.TOKEN_SECRET);

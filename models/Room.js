@@ -7,10 +7,10 @@ class Room extends BaseModel {
     super("Room");
   }
 
-  // findAll(params) {
-  //   return this.Models[this.modelname].find(params)
-  //     .populate("messages");
-  // }
+  findAll(params) {
+    return this.Models[this.modelname].find(params)
+      .populate("messages");
+  }
 
   findOne(params) {
     if (params && params._id) {
@@ -18,6 +18,13 @@ class Room extends BaseModel {
     }
     return this.Models[this.modelname].findOne(params)
       .populate("messages");
+  }
+
+  userJoinRoom(user, room) {
+    return this.Models.Room.update(
+      { _id: room._id },
+      { $push: { users: user._id } }
+    )
   }
 }
 

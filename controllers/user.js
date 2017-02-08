@@ -2,24 +2,10 @@
 
 const TokenGenerator = require("../services/TokenGenerator");
 const PasswordHelper = require("../services/PasswordHelper");
-const SocketIOServer = require("../services/SocketIOServer");
 
 const User = require("../models/User");
 
 const errors = require("../config/errors");
-
-module.exports.joinRoom = (socket, action, next) => {
-  User
-  .joinRoom(action.data)
-  .then(rows => {
-    return SocketIOServer.broadcast([`user/${socket.decoded_token.user._id}`], [{
-      type: "USER_JOIN_ROOM_SUCCESS",
-      payload: action.data,
-      notification: `User ${socket.decoded_token.user.fullname} updated an User`,
-    }], socket.decoded_token.user)
-  })
-  .catch(err => next(err));
-}
 
 // module.exports.findOne = (socket, action, next) => {
 //   User
@@ -68,6 +54,7 @@ module.exports.loginUser = (req, res, next) => {
     } else if (!PasswordHelper.comparePassword(req.body.password, user.passwordHash)) {
       throw new errors.AuthenticationError("Incorrect password.");
     } else {
+      // User.updateById({ online: true }, user._id);
       const payload = TokenGenerator.generateLoginPayload(user);
       const token = TokenGenerator.generateToken(payload);
       user.passwordHash = undefined;

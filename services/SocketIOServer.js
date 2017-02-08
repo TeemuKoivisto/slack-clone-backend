@@ -41,6 +41,7 @@ class WebSocketServer {
     this.server = io(server);
     console.log("SocketIO server started at " + port)
 
+    const self = this;
     this.server.sockets
       .on("connection", ioJwt.authorize({
         secret: process.env.TOKEN_SECRET,
@@ -55,13 +56,15 @@ class WebSocketServer {
         if (user.role === "admin") {
           socket.join(user.role)
         }
+        socket.join(`user/${user.id}`)
         socket.join("all");
       });
 
     this.server.on("connection", function(socket){
       console.log("Connection to client established");
 
-      socket.on("action", routes(socket));
+      // passes the socket and reference to the broadcast method for controllers to use
+      socket.on("action", routes(socket, self.broadcast.bind(self)));
 
       socket.on("disconnect", function() {
         console.log("Client has disconnected");
@@ -120,22 +123,28 @@ class WebSocketServer {
    * @param {Array} actions - list of actions for the redux-store
    */
   broadcast(notifiedRooms, actions, user) {
+    console.log("brudcasting")
+    // console.log(notifiedRooms)
+    // console.log(actions)
+    // console.log(user)
     return this.createNotifications(actions, user)
       .then(notifications => {
-        
+
         const prunedActions = actions.map(action => {
           return {
             type: action.type,
             payload: action.payload,
           }
         })
+
         notifiedRooms.map(room => {
+          // console.log(this.server.sockets.adapter.rooms)
           if (this.server.sockets.adapter.rooms[room]) {
             // const client = this.server.sockets.adapter.rooms[room].sockets
             // console.log(this.server.sockets)
             // console.log(this.server.sockets.adapter.rooms[room])
             // console.log(this.server.connected)
-            console.log("emitting to ", room)
+            // console.log("emitting to ", room)
             Object.keys(this.server.sockets.adapter.rooms[room].sockets).map(clientId => {
               // console.log(clientId)
               const socket = this.server.sockets.connected[clientId];
