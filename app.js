@@ -39,7 +39,8 @@ app.use(bodyParser.json());
  * CORS is shorthand for "Cross-Origin-Resource-Sharing" which means that this API
  * will accept request made outside its native port.
  */
-app.use(cors());
+// app.use(cors());
+app.use(cors({ credentials: true, origin: ["http://localhost:3333", "https://slack-clone-extreme.herokuapp.com"] }));
 
 /**
  * This loads the routes defined in ./config/routes to the root path "".
