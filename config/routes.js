@@ -29,6 +29,6 @@ router.post("/login/anon",
 
 router.use("", auth.authenticate);
 
-router.use("", errorHandler.handleErrors);
+// router.use("", errorHandler.handleErrors);
 
 module.exports = router;

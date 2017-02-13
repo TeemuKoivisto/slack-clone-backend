@@ -19,6 +19,12 @@ class Room extends BaseModel {
       .populate("users");
   }
 
+  findUserRoom(user, room) {
+    return this.Models[this.modelname].findOne(
+      { _id: room._id, users: user._id }
+    )
+  }
+
   userJoinRoom(user, room) {
     return this.Models.Room.update(
       { _id: room._id },
@@ -30,6 +36,14 @@ class Room extends BaseModel {
     return this.Models.Room.update(
       { _id: room._id },
       { $pull: { users: user._id } }
+    )
+  }
+
+  removeUserFromRooms(userId) {
+    return this.Models.Room.update(
+      { },
+      { $pull: { users: userId } },
+      { multi: true }
     )
   }
 }

@@ -5,11 +5,8 @@ const express = require("express");
 const io = require("socket.io");
 const ioJwt = require("socketio-jwt");
 
-const TokenGenerator = require("./TokenGenerator");
-
 const User = require("../models/User")
-// const StudyField = require("../models/StudyField")
-// const Notification = require("../models/Notification")
+const Room = require("../models/Room")
 
 const routes = require("../config/socket-routes");
 
@@ -17,28 +14,13 @@ class WebSocketServer {
 
   constructor() {
     this.server = undefined;
-    // this.rooms = [];
-    // this.admins = [];
-    // this.studyfields = [];
   }
-
-  // fetchDataFromDB() {
-  //   User.findAll({
-  //     role: "admin",
-  //     isActive: true,
-  //     isRetired: false,
-  //   })
-  //   .then(admins => {
-  //     this.admins = admins;
-  //   })
-  // }
 
   updateUser(values, id) {
     return User.updateById({ online: false }, id);
   }
 
   start() {
-    // this.fetchDataFromDB();
     const app = express();
     const port = process.env.WEBSOCKET_PORT || 8008;
     const server = app.listen(port);
@@ -75,23 +57,23 @@ class WebSocketServer {
         socket.join("all");
       });
 
-    this.server.on("connection", function(socket){
+    this.server.on("connection", (socket) => {
       console.log("Connection to client established");
-      // User.updateById({ online: true }, socket.decoded_token.user._id);
+      // User.updateById({ online: true }, socket.decoded_token.user._id)
+      // .then(() => {})
 
       // passes the socket and reference to the broadcast method for controllers to use
       socket.on("action", routes(socket, {
         broadcast: self.broadcast.bind(self),
         joinRoom: self.joinRoom.bind(self),
       }));
-      // socket.on("action", routes(socket, self.broadcast.bind(self)));
 
-      socket.on("disconnect", function() {
+      socket.on("disconnect", () => {
         console.log("Client has disconnected", socket.decoded_token.user._id);
+
         User.updateById({ online: false }, socket.decoded_token.user._id)
-        .then((s) => {
-          console.log("adsads", s)
-        })
+        .then(() => {})
+
       });
     });
   }

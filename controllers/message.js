@@ -1,6 +1,7 @@
 "use strict";
 
 const Message = require("../models/Message");
+const Room = require("../models/Room");
 
 const errors = require("../config/errors");
 
@@ -17,6 +18,16 @@ const errors = require("../config/errors");
 // }
 
 module.exports.saveOne = (action, response, next) => {
+  // stupid validation if the user isn't in the room, who cares
+  // Room
+  // .findUserRoom(action.user, action.data.Room)
+  // .then(room => {
+  //   if (!room) {
+
+  //   }
+  //   return Message.saveOne(action.data);
+  // })
+
   Message
   .saveOne(action.data)
   .then(message => {

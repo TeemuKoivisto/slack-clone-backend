@@ -4,6 +4,7 @@ const TokenGenerator = require("../services/TokenGenerator");
 const PasswordHelper = require("../services/PasswordHelper");
 
 const User = require("../models/User");
+const Room = require("../models/Room");
 
 const errors = require("../config/errors");
 
@@ -61,11 +62,11 @@ module.exports.loginUser = (req, res, next) => {
     }
   })
   .then(() => {
-    const payload = TokenGenerator.generateLoginPayload(user);
+    const payload = TokenGenerator.generateLoginPayload(foundUser);
     const token = TokenGenerator.generateToken(payload);
-    user.passwordHash = undefined;
+    foundUser.passwordHash = undefined;
     res.status(200).send({
-      user,
+      user: foundUser,
       token,
       expires: payload.expires,
     });
@@ -95,6 +96,23 @@ module.exports.loginAnonUser = (req, res, next) => {
       token,
       expires: payload.expires,
     });
+  })
+  .catch(err => next(err));
+};
+
+module.exports.logoutAnonUser = (action, response, next) => {
+  Promise.all([
+    User.updateById({ online: false }, action.data._id),
+    Room.removeUserFromRooms(action.data._id),
+  ])
+  .then(result => {
+    return response.broadcast(["all"], [{
+      type: "ROOM_LEAVE_ALL_SUCCESS",
+      payload: {
+        user: action.data,
+      },
+      // notification: `User ${socket.decoded_token.user.fullname} updated an User`,
+    }], action.data)
   })
   .catch(err => next(err));
 };

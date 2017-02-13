@@ -41,12 +41,18 @@ module.exports = (socket, response) => (action) => {
     case "ROOM_LEAVE_ONE":
       roomCtrl.leaveRoom(action, response, next);
       break;
+    case "ROOM_LEAVE_ALL":
+      roomCtrl.leaveRoom(action, response, next);
+      break;
     // case "MESSAGE_GET_ALL":
     //   msgCtrl.findAll(action, response, next);
     //   break;
     case "MESSAGE_SAVE_ONE":
       validateEvent("message", "save");
       msgCtrl.saveOne(action, response, next);
+      break;
+    case "LOGOUT_ANON_USER":
+      userCtrl.logoutAnonUser(action, response, next);
       break;
     default:
       errorHandler();
