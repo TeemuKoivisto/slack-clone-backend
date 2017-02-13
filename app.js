@@ -50,18 +50,18 @@ app.use("", require("./config/routes"));
 const SocketIOServer = require("./services/SocketIOServer");
 
 /**
- * If module has no parent which means that it has been loaded directly with 'node app.js'
+ * If module has no parent which means that it has been loaded directly with "node app.js"
  * then start up the server. This is used for testing when starting up the server is
- * unpreferred when loading this file with 'require("app")'.
+ * unpreferred when loading this file with "require("app")".
  */
 if (!module.parent) {
-  app.listen(port, (err) => {
-    if (err) {
-      console.log(err);
-    } else {
-      console.log(`App is listening on port ${port}`);
-    }
-  });
+  // app.listen(port, (err) => {
+  //   if (err) {
+  //     console.log(err);
+  //   } else {
+  //     console.log(`App is listening on port ${port}`);
+  //   }
+  // });
 
   SocketIOServer.start();
 
