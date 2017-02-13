@@ -44,6 +44,8 @@ const errors = require("../config/errors");
 // };
 
 module.exports.loginUser = (req, res, next) => {
+  let foundUser;
+
   User
   .findOne({ email: req.body.email })
   .then(user => {
@@ -54,16 +56,45 @@ module.exports.loginUser = (req, res, next) => {
     } else if (!PasswordHelper.comparePassword(req.body.password, user.passwordHash)) {
       throw new errors.AuthenticationError("Incorrect password.");
     } else {
-      // User.updateById({ online: true }, user._id);
-      const payload = TokenGenerator.generateLoginPayload(user);
-      const token = TokenGenerator.generateToken(payload);
-      user.passwordHash = undefined;
-      res.status(200).send({
-        user,
-        token,
-        expires: payload.expires,
-      });
+      foundUser = user;
+      return User.updateById({ online: true }, user._id);
     }
+  })
+  .then(() => {
+    const payload = TokenGenerator.generateLoginPayload(user);
+    const token = TokenGenerator.generateToken(payload);
+    user.passwordHash = undefined;
+    res.status(200).send({
+      user,
+      token,
+      expires: payload.expires,
+    });
+  })
+  .catch(err => next(err));
+};
+
+module.exports.loginAnonUser = (req, res, next) => {
+  User
+  .findOne({ nick: req.body.nick })
+  .then(user => {
+    if (user && user.role !== "anon") {
+      throw new errors.BadRequestError("Registered user already found with the same nick.");
+    } else if (user && user.online) {
+      throw new errors.BadRequestError("Other user is already online with the same nick.");
+    } else if (user && !user.online) {
+      return User.updateById({ online: true }, user._id);
+    } else {
+      return User.saveOne({ nick: req.body.nick, role: "anon" });
+    }
+  })
+  .then((user) => {
+    const payload = TokenGenerator.generateLoginPayload(user);
+    const token = TokenGenerator.generateToken(payload);
+    res.status(200).send({
+      user,
+      token,
+      expires: payload.expires,
+    });
   })
   .catch(err => next(err));
 };

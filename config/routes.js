@@ -20,6 +20,9 @@ router.get("/auth", auth.authenticate, authTest);
 router.post("/login",
   validate.validateBody("user", "login"),
   userCtrl.loginUser);
+router.post("/login/anon",
+  validate.validateBody("user", "anonLogin"),
+  userCtrl.loginAnonUser);
 // router.post("/user",
 //   validate.validateBody("user", "save"),
 //   userCtrl.saveOne);

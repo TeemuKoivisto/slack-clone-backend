@@ -1,3 +1,4 @@
 NODE_ENV=development
 TOKEN_SECRET=secrecy
-DB_URL=mongodb://mydbuser:mydbpassword@ds061354.mlab.com:61354/mydb
+DB_URL=mongodb://mydbuser:mydbpassword@localhost:27017/mydb
+DB_URL2=mongodb://mydbuser:mydbpassword@ds061354.mlab.com:61354/mydb

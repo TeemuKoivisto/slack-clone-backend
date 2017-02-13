@@ -4,7 +4,7 @@ const Message = require("../models/Message");
 
 const errors = require("../config/errors");
 
-// module.exports.findAll = (action, broadcast, next) => {
+// module.exports.findAll = (action, response, next) => {
 //   Message
 //   .findAll()
 //   .then(messages => {
@@ -16,11 +16,11 @@ const errors = require("../config/errors");
 //   .catch(err => next(err));
 // }
 
-module.exports.saveOne = (action, broadcast, next) => {
+module.exports.saveOne = (action, response, next) => {
   Message
   .saveOne(action.data)
   .then(message => {
-    return broadcast([`user/${action.user.id}`], [{
+    return response.broadcast([`room/${action.data.Room}`], [{
       type: "MESSAGE_SAVE_ONE_SUCCESS",
       payload: message,
       // notification: `User ${socket.decoded_token.user.fullname} updated an User`,

@@ -85,6 +85,7 @@ if (commands.length > 2) {
       break;
     default:
       console.log(`Unknown command ${command}`);
+      process.exit();
       break;
   }
 }

@@ -3,6 +3,10 @@
 const mongoose = require("mongoose");
 mongoose.Promise = global.Promise;
 
+if (process.env.NODE_ENV === "development") {
+  mongoose.set("debug", true);
+}
+
 mongoose.connection.on("connected", () => {
   console.log("Connected to " + process.env.DB_URL);
 });

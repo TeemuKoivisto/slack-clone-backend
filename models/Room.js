@@ -9,21 +9,27 @@ class Room extends BaseModel {
 
   findAll(params) {
     return this.Models[this.modelname].find(params)
-      .populate("messages");
+      .populate("messages")
+      .populate("users");
   }
 
   findOne(params) {
-    if (params && params._id) {
-      params._id = this.Models.mongoose.Types.ObjectId(params._id);
-    }
     return this.Models[this.modelname].findOne(params)
-      .populate("messages");
+      .populate("messages")
+      .populate("users");
   }
 
   userJoinRoom(user, room) {
     return this.Models.Room.update(
       { _id: room._id },
-      { $push: { users: user._id } }
+      { $addToSet: { users: user._id } }
+    )
+  }
+
+  userLeaveRoom(user, room) {
+    return this.Models.Room.update(
+      { _id: room._id },
+      { $pull: { users: user._id } }
     )
   }
 }

@@ -19,10 +19,9 @@ class TokenGenerator {
   generateLoginPayload(user) {
     const payload = {
       user: {
-        id: user.id,
-        fullname: `${user.firstname} ${user.lastname}`,
+        _id: user._id,
+        fullname: user.firstname ? `${user.firstname} ${user.lastname}` : "Anonymous",
         role: user.role,
-        StudyFieldId: user.StudyFieldId,
       },
       audience: "login",
       // expires: Math.floor(Date.now() / 1000) + 15,
@@ -30,9 +29,6 @@ class TokenGenerator {
       // expiresIn: 172800, // seconds
     };
     return payload;
-  }
-  derp() {
-    return "derp"
   }
 }
 

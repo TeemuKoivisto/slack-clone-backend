@@ -14,23 +14,22 @@ const RoomSchema = new Schema({
   created: { type: Date, default: Date.now },
   name: { type: String, required: true },
   messages: [{ type: Schema.Types.ObjectId, ref: "Message" }],
-  users: [{ type: Schema.Types.ObjectId, ref: "Users" }],
+  users: [{ type: Schema.Types.ObjectId, ref: "User" }],
 });
 
 const UserSchema = new Schema({
   created: { type: Date, default: Date.now },
-  firstname: { type: String, required: true },
-  lastname: { type: String, required: true },
-  nick: { type: String, required: true },
-  email: { type: String, required: true, unique: true },
-  passwordHash: { type: String, required: true },
+  firstname: { type: String },
+  lastname: { type: String },
+  nick: { type: String, required: true, unique: true },
+  email: { type: String },
+  passwordHash: { type: String },
   role: { type: String, required: true },
-  online: { type: Boolean, required: true, default: false },
+  online: { type: Boolean, required: true, default: true },
 });
 
 module.exports = {
   Message: mongoose.model("Message", MessageSchema),
   Room: mongoose.model("Room", RoomSchema),
   User: mongoose.model("User", UserSchema),
-  mongoose,
 };
