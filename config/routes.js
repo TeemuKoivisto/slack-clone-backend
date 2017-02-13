@@ -27,7 +27,7 @@ router.post("/login/anon",
 //   validate.validateBody("user", "save"),
 //   userCtrl.saveOne);
 
-router.use("", auth.authenticate);
+// router.use("", auth.authenticate);
 
 router.use("", errorHandler.handleErrors);
 
