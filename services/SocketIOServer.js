@@ -1,6 +1,7 @@
 "use strict";
 
 const express = require("express");
+const cors = require("cors");
 
 const io = require("socket.io");
 const ioJwt = require("socketio-jwt");
@@ -22,6 +23,7 @@ class WebSocketServer {
 
   start() {
     const app = express();
+    app.use(cors());
     const port = process.env.WEBSOCKET_PORT || 8008;
     const server = app.listen(port);
     this.server = io(server);
