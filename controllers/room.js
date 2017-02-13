@@ -7,7 +7,7 @@ const errors = require("../config/errors");
 
 module.exports.findOne = (action, response, next) => {
   Room
-  .findOne(action.data)
+  .findOne({ _id: action.data.room._id })
   .then(room => {
     return response.broadcast([`user/${action.user._id}`], [{
       type: "ROOM_GET_ONE_SUCCESS",
@@ -55,7 +55,7 @@ module.exports.saveOne = (action, response, next) => {
 
 module.exports.joinRoom = (action, response, next) => {
   Room
-  .userJoinRoom(action.user, action.data)
+  .userJoinRoom(action.user, action.data.room)
   .then(result => {
     // stupid optimization
     // if (result.nModified > 0) {
@@ -74,13 +74,13 @@ module.exports.joinRoom = (action, response, next) => {
     // const payload = user === "no-changes" ? Object.assign({}, action.user, action.data)
     //  : Object.assign({}, user, action.data);
 
-    response.joinRoom(action.data._id, action.user._id);
+    response.joinRoom(action.data.room._id, action.user._id);
 
-    return response.broadcast([`room/${action.data._id}`], [{
+    return response.broadcast([`room/${action.data.room._id}`], [{
       type: "ROOM_JOIN_ONE_SUCCESS",
       payload: {
         user,
-        room: action.data,
+        room: action.data.room,
       },
       // notification: `User ${socket.decoded_token.user.fullname} updated an User`,
     }], action.user)
@@ -90,18 +90,19 @@ module.exports.joinRoom = (action, response, next) => {
 
 module.exports.leaveRoom = (action, response, next) => {
   Room
-  .userLeaveRoom(action.user, action.data)
+  .userLeaveRoom(action.user, action.data.room)
   .then(rows => {
-    console.log(action.user)
-    console.log(rows)
-    return response.broadcast([`user/${action.user._id}`], [{
+    return response.broadcast([`room/${action.data.room._id}`], [{
       type: "ROOM_LEAVE_ONE_SUCCESS",
       payload: {
         user: action.user,
-        room: action.data,
+        room: action.data.room,
       },
       // notification: `User ${socket.decoded_token.user.fullname} updated an User`,
     }], action.user)
+  })
+  .then(() => {
+    response.leaveRoom(action.data.room._id, action.user._id);
   })
   .catch(err => next(err));
 }

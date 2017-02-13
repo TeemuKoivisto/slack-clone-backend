@@ -23,7 +23,7 @@ class WebSocketServer {
 
   start() {
     const app = express();
-    app.use(cors());
+    // app.use(cors());
     const port = process.env.WEBSOCKET_PORT || 8008;
     const server = app.listen(port);
     this.server = io(server);
@@ -59,7 +59,7 @@ class WebSocketServer {
         socket.join("all");
       });
 
-    this.server.on("connection", (socket) => {
+    this.server.on("connection", function(socket) {
       console.log("Connection to client established");
       // User.updateById({ online: true }, socket.decoded_token.user._id)
       // .then(() => {})
@@ -71,7 +71,7 @@ class WebSocketServer {
       }));
 
       socket.on("disconnect", () => {
-        console.log("Client has disconnected", socket.decoded_token.user._id);
+        console.log("Client has disconnected", socket.decoded_token.user);
 
         User.updateById({ online: false }, socket.decoded_token.user._id)
         .then(() => {})
@@ -121,6 +121,16 @@ class WebSocketServer {
       const clientId = socketsKeys[0];
       const socket = this.server.sockets.connected[clientId];
       socket.join(`room/${roomId}`);
+    }
+  }
+
+  leaveRoom(roomId, userId) {
+    if (this.server.sockets.adapter.rooms[`user/${userId}`]) {
+      const socketsKeys = Object.keys(this.server.sockets.adapter.rooms[`user/${userId}`].sockets);
+      // what if more than 1 ??? lul or 0????? even worse...
+      const clientId = socketsKeys[0];
+      const socket = this.server.sockets.connected[clientId];
+      socket.leave(`room/${roomId}`);
     }
   }
 

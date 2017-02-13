@@ -1,4 +1,7 @@
 NODE_ENV=development
+PORT=3333
+WEBSOCKET_PORT=8008
 TOKEN_SECRET=secrecy
-DB_URL=mongodb://mydbuser:mydbpassword@localhost:27017/mydb
-DB_URL2=mongodb://mydbuser:mydbpassword@ds061354.mlab.com:61354/mydb
+DB_URL2=mongodb://mydbuser:mydbpassword@localhost:27017/mydb
+DB_URL3=mongodb://mydbuser:mydbpassword@ds061354.mlab.com:61354/mydb
+DB_URL=mongodb://mydbuser:mydbpassword@ds151289.mlab.com:51289/slack-clone-extreme
