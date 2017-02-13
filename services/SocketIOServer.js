@@ -23,7 +23,7 @@ class WebSocketServer {
 
   start() {
     const app = express();
-    // app.use(cors());
+    app.use(cors({ credentials: true, origin: [ "localhost", "https://slack-clone-extreme.herokuapp.com"]}));
     const port = process.env.WEBSOCKET_PORT || 8008;
     const server = app.listen(port);
     this.server = io(server);
