@@ -1,7 +1,6 @@
 "use strict";
 
 const express = require("express");
-const cors = require("cors");
 
 const io = require("socket.io");
 const ioJwt = require("socketio-jwt");
@@ -24,7 +23,7 @@ class WebSocketServer {
   start() {
     const app = express();
     // app.use(cors({ credentials: true, origin: [ "localhostss", "https://slack-clone-extreme.herokuapp.com"]}));
-    const port = process.env.WEBSOCKET_PORT || 8008;
+    const port = process.env.PORT || 8008;
     const server = app.listen(port);
     this.server = io(server);
     console.log("SocketIO server started at " + port)

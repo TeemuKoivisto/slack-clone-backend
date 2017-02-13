@@ -1,6 +1,5 @@
 NODE_ENV=development
-PORT=3332
-WEBSOCKET_PORT=8008
+PORT=8008
 TOKEN_SECRET=secrecy
 DB_URL2=mongodb://mydbuser:mydbpassword@localhost:27017/mydb
 DB_URL3=mongodb://mydbuser:mydbpassword@ds061354.mlab.com:61354/mydb

@@ -14,8 +14,6 @@ const cors = require("cors");
 
 const app = express();
 
-const port = process.env.PORT || 3332;
-
 /**
  * If NODE_ENV is not production use morgan to log all queries to the console
  */
@@ -24,10 +22,6 @@ if (process.env.NODE_ENV !== "production") {
   app.use(logger("dev"));
 }
 
-/**
- * Busboy is used for parsing data received as form-data such as file uploads.
- */
-app.use(busboy());
 /**
  * Body parser parses the request body from http-requests that have it.
  */
@@ -39,13 +33,7 @@ app.use(bodyParser.json());
  * CORS is shorthand for "Cross-Origin-Resource-Sharing" which means that this API
  * will accept request made outside its native port.
  */
-// app.use(cors());
 app.use(cors({ credentials: true, origin: ["http://localhost:3333", "https://slack-clone-extreme.herokuapp.com"] }));
-
-/**
- * This loads the routes defined in ./config/routes to the root path "".
- */
-app.use("", require("./config/routes"));
 
 const SocketIOServer = require("./services/SocketIOServer");
 
